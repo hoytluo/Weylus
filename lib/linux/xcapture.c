@@ -10,10 +10,16 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
+#include <stdio.h>
+#include <sys/types.h>
 #include <stdint.h>
 
 #include "../error.h"
 #include "xhelper.h"
+#include <sys/types.h>
+       #include <sys/stat.h>
+       #include <fcntl.h>
+#include <unistd.h>
 
 int clamp(int x, int lb, int ub)
 {
@@ -95,7 +101,6 @@ void* start_capture(Capturable* cap, CaptureContext* ctx, Error* err)
 		&ctx->shminfo,
 		width,
 		height);
-
 	ctx->shminfo.shmid =
 		shmget(IPC_PRIVATE, ctx->ximg->bytes_per_line * ctx->ximg->height, IPC_CREAT | 0777);
 	ctx->shminfo.shmaddr = ctx->ximg->data = (char*)shmat(ctx->shminfo.shmid, 0, 0);
@@ -163,7 +168,6 @@ void capture_screen(CaptureContext* ctx, struct Image* img, int capture_cursor, 
 		int is_offscreen = ctx->cap.c.winfo.is_regular_window &&
 						   (x < 0 || y < 0 || x + (int)width > ctx->cap.screen->width ||
 							y + (int)height > ctx->cap.screen->height);
-
 		active_window =
 			(Window*)get_property(ctx->cap.disp, root, XA_WINDOW, "_NET_ACTIVE_WINDOW", &size, err);
 		if (!ctx->wayland && *active_window == ctx->cap.c.winfo.win && !is_offscreen)
@@ -171,6 +175,7 @@ void capture_screen(CaptureContext* ctx, struct Image* img, int capture_cursor, 
 			// cap window within its root so menus are visible as strictly speaking menus do not
 			// belong to the window itself ...
 			// But don't do this on (X)Wayland as the root window is just black in that case.
+			
 			get_img_ret = XShmGetImage(ctx->cap.disp, root, ctx->ximg, x, y, 0x00ffffff);
 		}
 		else
@@ -186,7 +191,7 @@ void capture_screen(CaptureContext* ctx, struct Image* img, int capture_cursor, 
 					Pixmap pm = XCompositeNameWindowPixmap(ctx->cap.disp, ctx->cap.c.winfo.win);
 					get_img_ret = XShmGetImage(ctx->cap.disp, pm, ctx->ximg, 0, 0, 0x00ffffff);
 					XFreePixmap(ctx->cap.disp, pm);
-				}
+					}
 				else
 					ERROR(
 						err,
@@ -194,9 +199,24 @@ void capture_screen(CaptureContext* ctx, struct Image* img, int capture_cursor, 
 						"Can not capture window as it is off screen and Xcomposite is "
 						"unavailable!");
 			}
-			else
-				get_img_ret =
-					XShmGetImage(ctx->cap.disp, ctx->cap.c.winfo.win, ctx->ximg, 0, 0, 0x00ffffff);
+			else{
+				get_img_ret = XShmGetImage(ctx->cap.disp, ctx->cap.c.winfo.win, ctx->ximg, 0, 0, 0x00ffffff);
+				if(ctx->wayland && memcmp(ctx->ximg, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 13) == 0)
+				{
+					// the XShmGetImage return a blank image, use the xdg-desktop-portal to capture image
+					static char *pbuffer = NULL;
+					int dataSize = width * height *4;
+					int fd = 0;
+					if(pbuffer == NULL){
+						pbuffer = malloc(dataSize + 100);
+					}
+					system("dbus-capture");
+					fd = open("/dev/shm/kwin.bmp", O_RDONLY);
+					read(fd, pbuffer,  dataSize + 100);
+					close(fd);
+					memcpy(ctx->ximg->data, pbuffer + 54, dataSize);
+				}
+			}
 		}
 		free(active_window);
 		break;

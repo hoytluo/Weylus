@@ -54,7 +54,7 @@ fn main() {
     }()
     .unwrap_or(true);
 
-    if js_needs_update {
+    if js_needs_update && false {
         match tsc_command.status() {
             Err(err) => {
                 println!("cargo:warning=Failed to call tsc: {}", err);
@@ -104,7 +104,7 @@ fn main() {
             env::var("CARGO_FEATURE_FFMPEG_SYSTEM").is_ok() {
             "dylib"
         } else {
-            "static"
+            "dylib"
         };
     println!("cargo:rustc-link-lib={}=avdevice", ffmpeg_link_kind);
     println!("cargo:rustc-link-lib={}=avformat", ffmpeg_link_kind);
@@ -169,4 +169,6 @@ fn linux() {
     println!("cargo:rustc-link-lib={}=va-drm", va_link_kind);
     println!("cargo:rustc-link-lib={}=va-x11", va_link_kind);
     println!("cargo:rustc-link-lib=drm");
+    println!("cargo:rustc-link-lib=z");
+    println!("cargo:rustc-link-lib=lzma");
 }
