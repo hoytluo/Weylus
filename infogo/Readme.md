@@ -4,7 +4,7 @@ on some uos(wayland) platform the  XGetImage/XShmGetImage function return a blan
 
 # depends
 org.kde.kwin.Screenshot->screenshotFullscreen to caputure screen
-convert(imagemagick) to bmp under /dev/shm/kwin.bmp
+convert(imagemagick/imagemagick-6.q16) to bmp under /dev/shm/kwin.bmp
 
 # change 
 
