@@ -10,3 +10,6 @@ on some uos(wayland) platform the  XGetImage/XShmGetImage function return a blan
 
 # uinput
 please run the weylus-init.sh to add uinput auto
+
+# run
+./weylus.arm64 --auto-start --access-code=1234a --no-gui
