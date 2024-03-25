@@ -205,16 +205,18 @@ void capture_screen(CaptureContext* ctx, struct Image* img, int capture_cursor, 
 				{
 					// the XShmGetImage return a blank image, use the xdg-desktop-portal to capture image
 					static char *pbuffer = NULL;
-					int dataSize = width * height *4;
+					int dataSize = width * height * 4;
 					int fd = 0;
 					if(pbuffer == NULL){
 						pbuffer = malloc(dataSize + 100);
 					}
 					system("dbus-capture");
 					fd = open("/dev/shm/kwin.bmp", O_RDONLY);
-					read(fd, pbuffer,  dataSize + 100);
-					close(fd);
-					memcpy(ctx->ximg->data, pbuffer + 54, dataSize);
+					if(fd > 0){
+						read(fd, pbuffer,  dataSize + 100);
+						close(fd);
+						memcpy(ctx->ximg->data, pbuffer + 54, dataSize);
+					}
 				}
 			}
 		}
