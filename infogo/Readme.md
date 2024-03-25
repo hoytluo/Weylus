@@ -16,4 +16,14 @@ convert(imagemagick/imagemagick-6.q16) to bmp under /dev/shm/kwin.bmp
 please run the weylus-init.sh to add uinput auto
 
 # run
-./weylus.arm64 --auto-start --access-code=1234a --no-gui
+0. check the xgetimg output, if it can get captueimage skip setp 1,2 otherwise run step1,2
+1. apt install imagemagick-6.q16 # ensure the convert command is ok
+2. add dbus-capture to the run PATH # ensure the dbs-capture 
+3. run weylus-init.sh once and reboot the system
+4. run ./weylus.arm64 --auto-start --access-code=1234a --no-gui
+5. on another computer open chrome to explore the http://$IP:1702 to control the machine
+6. kill the weylus.arm64 when you finished the  remote
+
+
+# todo
+1. merege the code into the infogodesk
