@@ -12,6 +12,9 @@ convert(imagemagick/imagemagick-6.q16) to bmp under /dev/shm/kwin.bmp
 2. chagne the build.rs
 3. add the lib.js
 
+# compile apt
+libavcodec-dev libavformat-dev libswscale-dev liblzma-dev libavfilter-dev libavformat-dev libpostproc-dev libavdevice-dev
+
 # uinput
 please run the weylus-init.sh to add uinput auto
 
