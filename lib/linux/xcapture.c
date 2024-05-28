@@ -101,6 +101,7 @@ void* start_capture(Capturable* cap, CaptureContext* ctx, Error* err)
 		&ctx->shminfo,
 		width,
 		height);
+	// fprintf(stderr, "width = %d height = %d/%d per_line=%d size=%d\n", width, height, ctx->ximg->height, ctx->ximg->bytes_per_line, ctx->ximg->bytes_per_line * ctx->ximg->height);
 	ctx->shminfo.shmid =
 		shmget(IPC_PRIVATE, ctx->ximg->bytes_per_line * ctx->ximg->height, IPC_CREAT | 0777);
 	ctx->shminfo.shmaddr = ctx->ximg->data = (char*)shmat(ctx->shminfo.shmid, 0, 0);
@@ -200,12 +201,14 @@ void capture_screen(CaptureContext* ctx, struct Image* img, int capture_cursor, 
 						"unavailable!");
 			}
 			else{
+				// hoyt
+				memset(ctx->ximg->data, 0, ctx->ximg->bytes_per_line * ctx->ximg->height);
 				get_img_ret = XShmGetImage(ctx->cap.disp, ctx->cap.c.winfo.win, ctx->ximg, 0, 0, 0x00ffffff);
 				if(ctx->wayland && memcmp(ctx->ximg->data, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 13) == 0)
 				{
 					// the XShmGetImage return a blank image, use the xdg-desktop-portal to capture image
 					static char *pbuffer = NULL;
-					int dataSize = width * height * 4;
+					int dataSize = ctx->ximg->bytes_per_line * ctx->ximg->height;
 					int fd = 0;
 					if(pbuffer == NULL){
 						pbuffer = malloc(dataSize + 100);
