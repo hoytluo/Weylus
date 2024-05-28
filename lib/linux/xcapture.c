@@ -201,7 +201,7 @@ void capture_screen(CaptureContext* ctx, struct Image* img, int capture_cursor, 
 			}
 			else{
 				get_img_ret = XShmGetImage(ctx->cap.disp, ctx->cap.c.winfo.win, ctx->ximg, 0, 0, 0x00ffffff);
-				if(ctx->wayland && memcmp(ctx->ximg, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 13) == 0)
+				if(ctx->wayland && memcmp(ctx->ximg->data, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 13) == 0)
 				{
 					// the XShmGetImage return a blank image, use the xdg-desktop-portal to capture image
 					static char *pbuffer = NULL;
