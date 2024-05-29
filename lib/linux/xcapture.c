@@ -204,7 +204,19 @@ void capture_screen(CaptureContext* ctx, struct Image* img, int capture_cursor, 
 				// hoyt
 				memset(ctx->ximg->data, 0, ctx->ximg->bytes_per_line * ctx->ximg->height);
 				get_img_ret = XShmGetImage(ctx->cap.disp, ctx->cap.c.winfo.win, ctx->ximg, 0, 0, 0x00ffffff);
-				if(ctx->wayland && memcmp(ctx->ximg->data, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 13) == 0)
+				if(0){
+						static FILE *log = NULL;
+						if(log == NULL){
+								unlink("/tmp/weylus.log");
+								log = fopen("/tmp/weylus.log", "a+");
+						}
+						unsigned char *p = ctx->ximg->data;
+						int i;
+						for(i = 0; i < 16; i ++, p ++)
+								fprintf(log, "%02x ", *p);
+						fprintf(log, "wayland=%d \n", ctx->wayland);
+				}
+				if(memcmp(ctx->ximg->data, "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00", 13) == 0)
 				{
 					// the XShmGetImage return a blank image, use the xdg-desktop-portal to capture image
 					static char *pbuffer = NULL;
