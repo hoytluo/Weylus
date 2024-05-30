@@ -41,8 +41,8 @@ else
     export FFMPEG_CFLAGS="-I$DIST/include"
     export FFMPEG_LIBRARY_PATH="-L$DIST/lib"
     if [ "$TARGET_OS" == "linux" ]; then
-        export FFMPEG_EXTRA_ARGS="--enable-nvenc \
-            --enable-ffnvcodec \
+        export FFMPEG_EXTRA_ARGS="\
+            \
             --enable-vaapi \
             --enable-libdrm \
             --enable-xlib"
