@@ -170,5 +170,6 @@ fn linux() {
     println!("cargo:rustc-link-lib={}=va-x11", va_link_kind);
     println!("cargo:rustc-link-lib=drm");
     println!("cargo:rustc-link-lib=z");
-    println!("cargo:rustc-link-lib=lzma");
+   // not depend lzma
+   //  println!("cargo:rustc-link-lib=lzma");
 }
