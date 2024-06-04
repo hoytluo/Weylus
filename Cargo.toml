@@ -10,7 +10,7 @@ description = "Use your iPad or Android tablet as graphic tablet."
 autopilot = { git = "https://github.com/H-M-H/autopilot-rs.git", rev = "63eed09c715bfb665bb23172a3930a528e11691c" }
 bitflags = "^1.3"
 dirs = "^4.0"
-fltk = { version = "^1", features = ["no-pango"] }
+fltk = { version = "^1.4", features = ["no-pango"] }
 handlebars = "^4.1"
 hyper = { version = "^0.14", features = ["server", "tcp", "http1", "http2"] }
 image = { version = "^0.23", features = ["png"], default-features = false }

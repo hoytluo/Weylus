@@ -2,7 +2,9 @@
 
 set -ex
 
-test -d x264 || git clone --depth 1 -b stable https://code.videolan.org/videolan/x264.git x264
+#test -d x264 || git clone --depth 1 -b stable https://code.videolan.org/videolan/x264.git x264
+#loongarch must use master x264
+test -d x264 || git clone --depth 1  https://code.videolan.org/videolan/x264.git x264
 test -d ffmpeg || git clone --depth 1 -b n5.1 https://git.ffmpeg.org/ffmpeg.git ffmpeg
 if [ "$TARGET_OS" == "linux" ]; then
     test -d nv-codec-headers || git clone --depth 1 https://git.videolan.org/git/ffmpeg/nv-codec-headers.git
