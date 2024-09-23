@@ -53,9 +53,12 @@ void query(char* param)
 
    // append arguments
    if(param){
+	   // luozh 2024-09-23 use boolean arg 
+	   dbus_bool_t boolArg = true;
 	   dbus_message_iter_init_append(msg, &args);
-	   if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &param)) {
-  		fprintf(stderr, "Out Of Memory!\n"); 
+	   //if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_STRING, &param)) {
+	   if (!dbus_message_iter_append_basic(&args, DBUS_TYPE_BOOLEAN, &boolArg)) {
+  		   fprintf(stderr, "Out Of Memory!\n"); 
       		exit(1);
    	}
    }
@@ -112,6 +115,6 @@ int main(int argc, char** argv)
 		printf("This program will use org.kde.kwin.Screenshot->screenshotFullscreen to caputure screen\n");
 		printf("after successed capture image, will call convert(imagemagick) to bmp under /dev/shm/kwin.bmp\n");
 	}
-	query(NULL);
+	query("1");
    	return 0;
 }
